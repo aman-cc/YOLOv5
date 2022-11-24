@@ -1,0 +1,7 @@
+cython
+torch
+torchvision
+matplotlib
+pyyaml
+pandas
+tqdm
