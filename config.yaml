@@ -1,0 +1,16 @@
+sample_payload: 'sample_payload.json'
+EXPT_DIR : "./log"
+LOG_DIR : "./log"
+DATA_DIR : "./pascal_mini_ds"
+WEIGHTS_DIR : "./weights"
+exp_name: "yolov5-coco"
+weightsclear: True
+
+### TRAIN FUNCTION ARGS ###
+onprem: True
+train_epochs: 2
+batch_size: 2
+lr: 0.1
+wtd: 0.0001
+momentum: 0.9
+use_cuda: False
