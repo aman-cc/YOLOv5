@@ -9,8 +9,14 @@ import numpy as np
 
 import torch
 
-__all__ = ["setup_seed", "save_ckpt", "Meter", "ModelEMA", "find_ckpts", 
-          "reduce_weights"]
+__all__ = [
+    "setup_seed",
+    "save_ckpt",
+    "Meter",
+    "ModelEMA",
+    "find_ckpts",
+    "reduce_weights",
+]
 
 
 def setup_seed(seed):
@@ -23,26 +29,30 @@ def setup_seed(seed):
     else:
         torch.backends.cudnn.deterministic = False
         torch.backends.cudnn.benchmark = True
-    
+
 
 def save_ckpt(model, optimizer, epochs, path, **kwargs):
     checkpoint = {}
     checkpoint["model"] = model.state_dict()
-    checkpoint["optimizer"]  = optimizer.state_dict()
+    checkpoint["optimizer"] = optimizer.state_dict()
     checkpoint["epochs"] = epochs
-        
+
     for k, v in kwargs.items():
         checkpoint[k] = v
-        
+
     prefix, ext = os.path.splitext(path)
     ckpt_path = "{}{}".format(prefix, ext)
     torch.save(checkpoint, ckpt_path)
 
-    
+
 def find_ckpts(path):
     prefix, ext = os.path.splitext(path)
     ckpts = glob.glob(prefix + "_*" + ext)
-    ckpts.sort(key=lambda x: int(re.search(r"_(\d+){}".format(ext), os.path.split(x)[1]).group(1)))
+    ckpts.sort(
+        key=lambda x: int(
+            re.search(r"_(\d+){}".format(ext), os.path.split(x)[1]).group(1)
+        )
+    )
     return ckpts
 
 
@@ -61,15 +71,15 @@ def reduce_weights(path):
     name, ext = os.path.splitext(path)
     new_file = "{}_{}{}".format(name, sha256[:8], ext)
     torch.save(weights, new_file)
-    
-    
+
+
 class TextArea:
     def __init__(self):
         self.buffer = []
-    
+
     def write(self, s):
         self.buffer.append(s)
-        
+
     def __str__(self):
         return "".join(self.buffer)
 
@@ -82,8 +92,8 @@ class TextArea:
             return result
         else:
             return txt
-    
-    
+
+
 class Meter:
     def __init__(self, name):
         self.name = name
@@ -104,7 +114,7 @@ class Meter:
     def __str__(self):
         fmtstr = "{name}:sum={sum:.2f}, avg={avg:.4f}, count={count}"
         return fmtstr.format(**self.__dict__)
-    
+
 
 class ModelEMA:
     def __init__(self, model, decay=0.9999):
@@ -113,7 +123,7 @@ class ModelEMA:
         self.updates = 0
         self.decay = lambda x: decay * (1 - math.exp(-x / 2000))
         self.distributed = isinstance(model, torch.nn.parallel.DistributedDataParallel)
-        
+
         for p in self.ema.parameters():
             p.requires_grad_(False)
 
@@ -129,6 +139,4 @@ class ModelEMA:
             for k, v in esd.items():
                 if v.dtype.is_floating_point:
                     v *= d
-                    v += (1. - d) * msd[k].detach()
-                   
-                
+                    v += (1.0 - d) * msd[k].detach()

@@ -10,8 +10,14 @@ __all__ = ["RandomAffine"]
 
 
 class RandomAffine:
-    def __init__(self, degrees=(0, 0), translate=(0, 0),
-                 scale=(1, 1), shear=(0, 0, 0, 0), **kwargs):
+    def __init__(
+        self,
+        degrees=(0, 0),
+        translate=(0, 0),
+        scale=(1, 1),
+        shear=(0, 0, 0, 0),
+        **kwargs
+    ):
         self.degrees = degrees
         self.translate = translate
         self.scale = scale
@@ -24,15 +30,19 @@ class RandomAffine:
         ms = [s * t for s, t in zip(img_size, translate)]
         translations = [round(random.uniform(-m, m)) for m in ms]
         scale = random.uniform(scale_ranges[0], scale_ranges[1])
-        shear = [random.uniform(shears[0], shears[1]),
-                 random.uniform(shears[2], shears[3])]
-        
+        shear = [
+            random.uniform(shears[0], shears[1]),
+            random.uniform(shears[2], shears[3]),
+        ]
+
         rot = math.radians(angle)
         shear = [math.radians(s) for s in shear]
         return rot, translations, scale, shear
-    
+
     def __call__(self, image, target={}):
-        ret = self.get_params(image.size, self.degrees, self.translate, self.scale, self.shear)
+        ret = self.get_params(
+            image.size, self.degrees, self.translate, self.scale, self.shear
+        )
         return self.affine(image, target, *ret, **self.kwargs)
 
     @staticmethod
@@ -98,5 +108,3 @@ class RandomAffine:
         """
         image = image.transform((w, h), Image.AFFINE, M, **kwargs)
         return image, target
-
-    

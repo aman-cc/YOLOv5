@@ -13,6 +13,7 @@ except ImportError:
 DALI = False
 try:
     import nvidia.dali
+
     DALI = True
 except ImportError:
     pass

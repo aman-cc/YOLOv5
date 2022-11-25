@@ -13,17 +13,26 @@ def xyxy2xywh(box):
 
 
 colors = (
-    (0, 1, 1), (1, 0, 1), (1, 1, 0), (1, 0, 0),(0, 1, 0), 
-    (0.8, 1, 1), (0.5, 0.4, 0.7), (1, 0.6, 0), (1, 0.4, 0.6), (0.4, 0.6, 0.4), 
+    (0, 1, 1),
+    (1, 0, 1),
+    (1, 1, 0),
+    (1, 0, 0),
+    (0, 1, 0),
+    (0.8, 1, 1),
+    (0.5, 0.4, 0.7),
+    (1, 0.6, 0),
+    (1, 0.4, 0.6),
+    (0.4, 0.6, 0.4),
 )
+
 
 def factor(x):
     # RGB color factors
     if x < 10:
         return colors[x]
-    
+
     i, n = x % 5, x // 5
-    base = 0.7 ** n
+    base = 0.7**n
     extra = 1 - base
     if i < 3:
         f = [base, base, base]
@@ -41,11 +50,11 @@ def show(images, targets=None, classes=None, save=""):
         targets = [targets]
     if isinstance(save, str):
         save = [save] * len(images)
-        
+
     for i in range(len(images)):
         show_single(images[i], targets[i] if targets else targets, classes, save[i])
 
-    
+
 def show_single(image, target, classes, save):
     """
     Show the image, with or without the target
@@ -65,23 +74,25 @@ def show_single(image, target, classes, save):
             f = torch.tensor(factor(i)).reshape(3, 1, 1).to(image)
             value = f * m
             image += value
-            
+
     image = image.clamp(0, 1)
     H, W = image.shape[-2:]
     fig = plt.figure(figsize=(W / 72, H / 72))
     ax = fig.add_subplot(111)
-    
+
     im = image.cpu().numpy()
-    ax.imshow(im.transpose(1, 2, 0)) # RGB
+    ax.imshow(im.transpose(1, 2, 0))  # RGB
     ax.set_title("W: {}   H: {}".format(W, H))
     ax.axis("off")
 
     if target:
         if "labels" in target:
             if classes is None:
-                raise ValueError("'classes' should not be None when 'target' has 'labels'!")
+                raise ValueError(
+                    "'classes' should not be None when 'target' has 'labels'!"
+                )
             tags = {l: i for i, l in enumerate(tuple(set(target["labels"].tolist())))}
-            
+
         index = 0
         if "boxes" in target:
             boxes = target["boxes"]
@@ -96,13 +107,24 @@ def show_single(image, target, classes, save):
                         s = round(s.item() * 100)
                         txt = "{} {}%".format(txt, s)
                     ax.text(
-                        b[0], b[1], txt, fontsize=10, color=factor(index),  
-                        horizontalalignment="left", verticalalignment="bottom",
-                        bbox=dict(boxstyle="square", fc="black", lw=1, alpha=1)
+                        b[0],
+                        b[1],
+                        txt,
+                        fontsize=10,
+                        color=factor(index),
+                        horizontalalignment="left",
+                        verticalalignment="bottom",
+                        bbox=dict(boxstyle="square", fc="black", lw=1, alpha=1),
                     )
-                    
-                    
-                rect = patches.Rectangle(b[:2], b[2], b[3], linewidth=2, edgecolor=factor(index), facecolor="none")
+
+                rect = patches.Rectangle(
+                    b[:2],
+                    b[2],
+                    b[3],
+                    linewidth=2,
+                    edgecolor=factor(index),
+                    facecolor="none",
+                )
                 ax.add_patch(rect)
 
     if save:
@@ -112,26 +134,28 @@ def show_single(image, target, classes, save):
         plt.margins(0, 0)
         plt.savefig(save)
     plt.show()
-    
-    
+
+
 def parse(txt):
     result = {}
     result["epoch"] = int(re.search(r"^epoch: (\d+)", txt, re.MULTILINE).group(1))
     result["lr_epoch"] = float(re.search(r"lr_epoch: (\d+.\d+)", txt).group(1))
     result["factor"] = float(re.search(r"factor: (\d+.\d+)", txt).group(1))
-    
-    outputs = re.findall(r"^(\d+)\s+(\d+.\d+)\s+(\d+.\d+)\s+(\d+.\d+)\n", txt, re.MULTILINE)
+
+    outputs = re.findall(
+        r"^(\d+)\s+(\d+.\d+)\s+(\d+.\d+)\s+(\d+.\d+)\n", txt, re.MULTILINE
+    )
     iters, loss_box, loss_obj, loss_cls = zip(*outputs)
     iters = [int(x) for x in iters]
     loss_box = [float(x) for x in loss_box]
     loss_obj = [float(x) for x in loss_obj]
     loss_cls = [float(x) for x in loss_cls]
-    
+
     result["iters"] = iters[len(iters) // 2]
     result["loss_box"] = sum(loss_box) / len(loss_box)
     result["loss_obj"] = sum(loss_obj) / len(loss_obj)
     result["loss_cls"] = sum(loss_cls) / len(loss_cls)
-    
+
     result["bbox_AP"] = float(re.search(r"'bbox AP': (\d+.\d+)", txt).group(1))
     return result
 
@@ -139,21 +163,21 @@ def parse(txt):
 def gather(captures):
     results = [parse(txt) for txt in captures]
     results.sort(key=lambda x: x["epoch"])
-    
+
     info = defaultdict(list)
     for res in results:
         info["epoch"].append(res["epoch"])
         info["lr_epoch"].append(res["lr_epoch"])
         info["factor"].append(res["factor"])
         info["bbox_AP"].append(res["bbox_AP"])
-        
+
         info["iters"].append(res["iters"])
         info["loss_box"].append(res["loss_box"])
         info["loss_obj"].append(res["loss_obj"])
         info["loss_cls"].append(res["loss_cls"])
     return info
-        
-    
+
+
 def plot(paths, x="epoch", y=["bbox_AP"], length=None, legend=True):
     if isinstance(paths, str):
         paths = [[paths]]
@@ -161,12 +185,12 @@ def plot(paths, x="epoch", y=["bbox_AP"], length=None, legend=True):
         for i, path in enumerate(paths):
             if isinstance(path, str):
                 paths[i] = [path]
-                
+
     if isinstance(y, str):
         y = [y]
     if isinstance(length, int):
         length = [length] * len(paths)
-        
+
     for i, path in enumerate(paths):
         captures = []
         for p in path:
@@ -174,8 +198,8 @@ def plot(paths, x="epoch", y=["bbox_AP"], length=None, legend=True):
                 text = f.read()
             captures.extend(re.findall(r"(epoch: \d+\n.*?)}\n", text, re.DOTALL))
         if length is not None:
-            captures = captures[:length[i]]
-            
+            captures = captures[: length[i]]
+
         data = gather(captures)
 
         x_axis = data[x]
@@ -185,4 +209,3 @@ def plot(paths, x="epoch", y=["bbox_AP"], length=None, legend=True):
     if legend:
         plt.legend()
     plt.xlabel(x)
-    
