@@ -1,7 +1,7 @@
-cython
-torch
+torch~=1.13.0
 torchvision
 matplotlib
 pyyaml
 pandas
+cython
 tqdm

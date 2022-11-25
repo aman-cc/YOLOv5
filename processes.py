@@ -9,7 +9,6 @@ import numpy as np
 import pandas as pd
 
 from tqdm import tqdm
-from alectio_sdk.sdk.sql_client import create_database, add_index
 
 DALI = False
 
