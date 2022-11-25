@@ -1,13 +1,15 @@
-from glob import glob
-import torch
-import yolo
-from PIL import Image
-from yolo.visualize import show
-from torchvision import transforms
 import argparse
-import time
 import math
 import os
+import time
+from glob import glob
+
+import torch
+from PIL import Image
+from torchvision import transforms
+
+import yolo
+from yolo.visualize import show
 
 # COCO dataset, 80 classes
 classes = (

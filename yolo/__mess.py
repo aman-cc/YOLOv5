@@ -4,9 +4,10 @@ The code of this file is only a copy of Jupyter Notebook code snippet.
 It's a MESS
 
 """
+from collections import OrderedDict
+
 # -----------------------------------------------------------------------------------------------------
 import torch
-from collections import OrderedDict
 
 a = m2.state_dict()
 b = c2
@@ -16,6 +17,7 @@ for k1, k2 in zip(a, b):
 torch.save(OrderedDict(n), "xxx.pth")
 # -----------------------------------------------------------------------------------------------------
 import torch
+
 import yolo
 
 
@@ -91,11 +93,12 @@ torch.save(
 )
 
 
+import math
+
 # -----------------------------------------------------------------------------------------------------
 import torch
-import math
-import yolo
 
+import yolo
 
 torch.set_printoptions(precision=1)
 
@@ -292,9 +295,10 @@ total: [
     [[159.0, 101.8], [95.8, 187.0], [309.8, 281.9]],
 ]
 """
+import torch
+
 # -----------------------------------------------------------------------------------------------------
 import yolo
-import torch
 
 model = yolo.YOLOv5(80)
 

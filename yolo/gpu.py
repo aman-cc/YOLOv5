@@ -1,5 +1,6 @@
-import os
 import json
+import os
+
 import torch
 
 __all__ = ["get_gpu_prop", "collect_gpu_info"]

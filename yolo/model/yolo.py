@@ -2,8 +2,8 @@ import math
 
 from torch import nn
 
-from .head import Head
 from .backbone import darknet_pan_backbone
+from .head import Head
 from .transform import Transformer
 
 

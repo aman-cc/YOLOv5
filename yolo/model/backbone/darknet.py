@@ -4,7 +4,7 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 
-from .utils import Conv, ConcatBlock
+from .utils import ConcatBlock, Conv
 
 
 class SpatialPyramidPooling(nn.Module):

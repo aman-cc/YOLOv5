@@ -1,10 +1,10 @@
 import math
 import random
-from PIL import Image
 
 import numpy as np
 import torch
 import torch.nn.functional as F
+from PIL import Image
 
 __all__ = ["RandomAffine"]
 

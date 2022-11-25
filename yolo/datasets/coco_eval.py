@@ -1,8 +1,8 @@
 import copy
-import torch
 
-from pycocotools.cocoeval import COCOeval
+import torch
 from pycocotools.coco import COCO
+from pycocotools.cocoeval import COCOeval
 
 
 class CocoEvaluator:

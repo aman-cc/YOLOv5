@@ -1,13 +1,12 @@
-import os
 import json
+import os
 import xml.etree.ElementTree as ET
-from PIL import Image
 from collections import defaultdict
 
 import torch
+from PIL import Image
 
 from .generalized_dataset import GeneralizedDataset
-
 
 VOC_CLASSES = (
     "aeroplane",

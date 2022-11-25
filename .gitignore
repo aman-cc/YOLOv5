@@ -2,6 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
+**/gpu_info.json
 
 # C extensions
 *.so

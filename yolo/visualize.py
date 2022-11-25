@@ -1,8 +1,8 @@
 import re
 from collections import defaultdict
 
-import torch
 import matplotlib.pyplot as plt
+import torch
 from matplotlib import patches
 
 

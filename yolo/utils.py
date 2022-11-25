@@ -5,8 +5,8 @@ import math
 import os
 import random
 import re
-import numpy as np
 
+import numpy as np
 import torch
 
 __all__ = [

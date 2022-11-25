@@ -5,7 +5,6 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 
-
 bn_eps = 0.0001
 bn_momentum = 0.03
 

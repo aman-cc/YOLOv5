@@ -1,8 +1,8 @@
+from torch import nn
+
+from .darknet import CSPDarknet
 from .path_aggregation_network import PathAggregationNetwork
 from .utils import IntermediateLayerGetter
-from .darknet import CSPDarknet
-
-from torch import nn
 
 
 class BackboneWithFPN(nn.Module):

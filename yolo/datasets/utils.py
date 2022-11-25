@@ -3,8 +3,8 @@ from collections import defaultdict
 
 import torch
 
-from .voc_dataset import VOCDataset
 from .coco_dataset import COCODataset
+from .voc_dataset import VOCDataset
 
 __all__ = ["datasets", "collate_wrapper", "GroupedBatchSampler", "DataPrefetcher"]
 

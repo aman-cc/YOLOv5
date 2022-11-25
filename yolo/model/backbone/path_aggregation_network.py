@@ -1,7 +1,7 @@
 import torch
 from torch import nn
 
-from .utils import Conv, ConcatBlock
+from .utils import ConcatBlock, Conv
 
 
 class PathAggregationNetwork(nn.Module):
