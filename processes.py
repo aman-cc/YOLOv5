@@ -11,9 +11,6 @@ from tqdm import tqdm
 
 import yolo
 
-DALI = False
-
-
 def getdatasetstate(args={}):
     return {k: k for k in range(100000)}
 
@@ -25,24 +22,21 @@ class YoloArgs:
         self.epochs = args["train_epochs"]
         self.use_cuda = args["use_cuda"]
         self.results = os.path.join(os.getcwd(), "results.json")
-
-        self.dataset = "coco"
-        self.dali = False
-        self.period = 273
-        self.iters = -1
-        self.seed = 3
-        self.model_size = "small"
-        self.img_sizes = [320, 416]
-        self.lr = 0.01
-        self.momentum = 0.937
-        self.weight_decay = 0.0005
-        self.print_freq = 100
-        self.world_size = 1
-        self.dist_url = "env://"
-        self.mosaic = None
-        self.distributed = False
-        self.classes = None
-        self.amp = False
+        self.dataset = args["dataset"]
+        self.dali = args["dali"]
+        self.period = args["period"]
+        self.iters = args["iters"]
+        self.seed = args["seed"]
+        self.model_size = args["model_size"]
+        self.img_sizes = args["img_sizes"]
+        self.lr = args["lr"]
+        self.momentum = args["momentum"]
+        self.weight_decay = args["weight_decay"]
+        self.print_freq = args["print_freq"]
+        self.world_size = args["world_size"]
+        self.distributed = args["distributed"]
+        self.mosaic = args["mosaic"]
+        self.amp = args["amp"]
 
 
 def train(args, resume_from, ckpt_file):
@@ -235,7 +229,7 @@ def train(args, resume_from, ckpt_file):
 
     for epoch in tqdm(range(epochs)):
 
-        if not DALI and yolo_args.distributed:
+        if yolo_args.distributed:
             sampler_train.set_epoch(epoch)
 
         A = time.time()
