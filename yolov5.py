@@ -277,12 +277,15 @@ if __name__ == "__main__":
         collate_fn=yolo.collate_wrapper,
         pin_memory=cuda,
     )
+    d_train = yolo.DataPrefetcher(data_loader_train) if cuda else data_loader_train
+    d_test = yolo.DataPrefetcher(data_loader_test) if cuda else data_loader_test
+
     num_classes = len(dataset_train.classes)
     warmup_iters = max(1000, 3 * len(dataset_train))
     save_path = os.path.join(args["EXPT_DIR"], "ckpt")
     yolo_obj.load_model(num_classes, warmup_iters, device)
     yolo_obj.load_weights("yolov5s_official_2cf45318.pth", device, pretrained=True)
-    yolo_obj.train(data_loader_train, data_loader_test, save_path, device)
-    mAP = yolo_obj.evaluate(data_loader_test, device)
+    yolo_obj.train(d_train, d_test, save_path, device)
+    mAP = yolo_obj.evaluate(d_test, device)
     # yolo_obj.load_weights('ckpt', pretrained=False)
-    results = yolo_obj.infer(data_loader_test, device)
+    results = yolo_obj.infer(d_test, device)
