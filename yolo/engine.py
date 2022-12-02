@@ -54,6 +54,7 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, args, ema):
 
         losses = {k: v * args.batch_size for k, v in losses.items()}
         total_loss = sum(losses.values())
+        total_loss_val = total_loss.detach().cpu().numpy().tolist()
         m_m.update(time.time() - S)
 
         # losses_reduced = distributed.reduce_dict(losses)
@@ -98,7 +99,7 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, args, ema):
             1000 * b_m.avg, 1000 * o_m.avg, 1000 * e_m.avg
         )
     )
-    return (m_m.sum + b_m.sum + o_m.sum + e_m.sum) / iters
+    return (m_m.sum + b_m.sum + o_m.sum + e_m.sum) / iters, total_loss_val
 
 
 def evaluate(model, data_loader, device, args, generate=True, evaluation=True):

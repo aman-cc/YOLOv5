@@ -113,6 +113,7 @@ class YOLOv5:
         self.ema_without_ddp = self.ema.ema.module if self.distributed else self.ema.ema
 
     def train(self, d_train, d_test, save_path, device):
+        loss_list, mAP_list = [], []
         for epoch in tqdm(range(self.epochs)):
 
             A = time.time()
@@ -122,9 +123,10 @@ class YOLOv5:
                     self.lr_epoch, self.lr_lambda(epoch)
                 )
             )
-            iter_train = yolo.train_one_epoch(
+            iter_train, loss = yolo.train_one_epoch(
                 self.model, self.optimizer, d_train, device, epoch, self, self.ema
             )
+            loss_list.append(loss)
             A = time.time() - A
 
             B = time.time()
@@ -138,6 +140,11 @@ class YOLOv5:
                     [self.batch_size / iter_train, self.batch_size / iter_eval],
                 )
                 print(eval_output.get_AP())
+                mAP_list.append(eval_output.get_AP().get('bbox AP', 0.0))
+
+            with open('train_monitoring.yaml', 'w') as f:
+                train_metrics = dict(loss=loss_list, mAP=mAP_list)
+                yaml.dump(train_metrics, f)
 
         yolo.save_ckpt(
             self.model_without_ddp,
