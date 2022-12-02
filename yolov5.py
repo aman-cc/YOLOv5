@@ -140,9 +140,9 @@ class YOLOv5:
                     [self.batch_size / iter_train, self.batch_size / iter_eval],
                 )
                 print(eval_output.get_AP())
-                mAP_list.append(eval_output.get_AP().get('bbox AP', 0.0))
+                mAP_list.append(eval_output.get_AP().get("bbox AP", 0.0))
 
-            with open('train_monitoring.yaml', 'w') as f:
+            with open("train_monitoring.yaml", "w") as f:
                 train_metrics = dict(loss=loss_list, mAP=mAP_list)
                 yaml.dump(train_metrics, f)
 
@@ -158,7 +158,7 @@ class YOLOv5:
     def evaluate(self, d_test, device):
         eval_output, iter_eval = yolo.evaluate(self.ema.ema, d_test, device, self)
         print(f"{eval_output.get_AP()}")
-        return eval_output.get_AP().get('bbox AP')
+        return eval_output.get_AP().get("bbox AP")
 
     def infer(self, d_infer, device):
         self.model.eval()

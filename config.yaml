@@ -2,8 +2,8 @@ EXPT_DIR : "./log"
 DATA_DIR : "./data_pascal_voc_backup"
 WEIGHTS_DIR : "./weights"
 onprem: True
-train_epochs: 20
-batch_size: 4
+train_epochs: 50
+batch_size: 32
 lr: 0.1
 wtd: 0.0001
 momentum: 0.9
