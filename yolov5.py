@@ -71,12 +71,12 @@ class YOLOv5:
         self.optimizer = torch.optim.SGD(
             params["biases"], lr=self.lr, momentum=self.momentum, nesterov=True
         )
-        self.optimizer.add_param_group({"params": params["conv_weights"], "weight_decay": wd})
+        self.optimizer.add_param_group(
+            {"params": params["conv_weights"], "weight_decay": wd}
+        )
         self.optimizer.add_param_group({"params": params["others"]})
         self.lr_lambda = (
-            lambda x: math.cos(
-                math.pi * x / ((x // self.period + 1) * self.period) / 2
-            )
+            lambda x: math.cos(math.pi * x / ((x // self.period + 1) * self.period) / 2)
             ** 2
             * 0.9
             + 0.1
@@ -96,9 +96,7 @@ class YOLOv5:
         if not os.path.isfile(ckpt_path):
             raise FileNotFoundError(f"Model weight not found at {ckpt_path}")
 
-        checkpoint = torch.load(
-            ckpt_path, map_location=device
-        )  # load last checkpoint
+        checkpoint = torch.load(ckpt_path, map_location=device)  # load last checkpoint
         if pretrained and self.num_classes != 80:  # Different dataset tuning
             # Remove some node's weights from loading
             remove_head_list = [
@@ -113,7 +111,7 @@ class YOLOv5:
                 checkpoint.pop(item_)
             self.model_without_ddp.load_state_dict(checkpoint, strict=False)
         else:
-            self.model_without_ddp.load_state_dict(checkpoint['model'])
+            self.model_without_ddp.load_state_dict(checkpoint["model"])
         self.ema = yolo.ModelEMA(self.model)
         self.ema_without_ddp = self.ema.ema.module if self.distributed else self.ema.ema
 
@@ -156,7 +154,7 @@ class YOLOv5:
     def evaluate(self, d_test, ckpt_path, device):
         eval_output, iter_eval = yolo.evaluate(self.ema.ema, d_test, device, self)
         print(f"{eval_output.get_AP()}")
-    
+
     def infer(self, d_infer, ckpt_path, device):
         self.model.eval()
         if cuda:
@@ -211,6 +209,7 @@ class YOLOv5:
             }
 
         return {"labels": labels, "predictions": predictions}
+
 
 if __name__ == "__main__":
     with open("./config.yaml", "r") as stream:
@@ -278,7 +277,7 @@ if __name__ == "__main__":
     num_classes = len(dataset_train.classes)
     warmup_iters = max(1000, 3 * len(dataset_train))
     yolo_obj.load_model(num_classes, warmup_iters, device)
-    yolo_obj.load_weights('yolov5s_official_2cf45318.pth', pretrained=True)
+    yolo_obj.load_weights("yolov5s_official_2cf45318.pth", pretrained=True)
     yolo_obj.train(data_loader_train, data_loader_test, "ckpt", device)
     yolo_obj.evaluate(data_loader_test, "ckpt", device)
     # yolo_obj.load_weights('ckpt', pretrained=False)
