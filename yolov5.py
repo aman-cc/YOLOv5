@@ -88,7 +88,7 @@ class YOLOv5:
         self.ema = yolo.ModelEMA(self.model)
         self.ema_without_ddp = self.ema.ema.module if self.distributed else self.ema.ema
 
-    def load_weights(self, weights_file, pretrained=False):
+    def load_weights(self, weights_file, device, pretrained=False):
         ckpt_path = os.path.join(self.expt_dir, weights_file)
         if not os.path.isfile(ckpt_path):
             raise FileNotFoundError(f"Model weight not found at {ckpt_path}")
@@ -148,14 +148,13 @@ class YOLOv5:
             ema=(self.ema_without_ddp.state_dict(), self.ema.updates),
         )
 
-    def evaluate(self, d_test, ckpt_path, device):
+    def evaluate(self, d_test, device):
         eval_output, iter_eval = yolo.evaluate(self.ema.ema, d_test, device, self)
         print(f"{eval_output.get_AP()}")
+        return eval_output.get_AP().get('bbox AP')
 
-    def infer(self, d_infer, ckpt_path, device):
+    def infer(self, d_infer, device):
         self.model.eval()
-        if cuda:
-            torch.cuda.empty_cache()
         self.model.to(device)
 
         for p in self.model.parameters():
@@ -275,8 +274,8 @@ if __name__ == "__main__":
     warmup_iters = max(1000, 3 * len(dataset_train))
     save_path = os.path.join(args["EXPT_DIR"], "ckpt")
     yolo_obj.load_model(num_classes, warmup_iters, device)
-    yolo_obj.load_weights("yolov5s_official_2cf45318.pth", pretrained=True)
+    yolo_obj.load_weights("yolov5s_official_2cf45318.pth", device, pretrained=True)
     yolo_obj.train(data_loader_train, data_loader_test, save_path, device)
-    yolo_obj.evaluate(data_loader_test, save_path, device)
+    mAP = yolo_obj.evaluate(data_loader_test, device)
     # yolo_obj.load_weights('ckpt', pretrained=False)
-    results = yolo_obj.infer(data_loader_test, save_path, device)
+    results = yolo_obj.infer(data_loader_test, device)
