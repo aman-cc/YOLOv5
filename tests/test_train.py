@@ -10,7 +10,7 @@ import yolo
 from yolov5 import YOLOv5
 
 def test_yolov5_train():
-    with open("test_config.yaml", "r") as stream:
+    with open("tests/test_config.yaml", "r") as stream:
         args = yaml.safe_load(stream)
 
     yolo_obj = YOLOv5(args)

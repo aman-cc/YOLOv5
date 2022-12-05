@@ -1,5 +1,5 @@
-EXPT_DIR : "../log"
-DATA_DIR : "../pascal_mini_ds"
+EXPT_DIR : "./log"
+DATA_DIR : "./pascal_mini_ds"
 WEIGHTS_DIR : "./weights"
 onprem: True
 train_epochs: 2

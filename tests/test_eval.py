@@ -11,7 +11,7 @@ from yolov5 import YOLOv5
 
 
 def test_yolov5_eval():
-    with open("test_config.yaml", "r") as stream:
+    with open("tests/test_config.yaml", "r") as stream:
         args = yaml.safe_load(stream)
 
     yolo_obj = YOLOv5(args)
@@ -64,9 +64,6 @@ def test_yolov5_eval():
     num_classes = len(dataset_test.classes)
     warmup_iters = max(1000, 3 * len(dataset_test))
     yolo_obj.load_model(num_classes, warmup_iters, device)
-    ckpt_path = os.path.join(args['EXPT_DIR'], 'ckpt')
-    if not os.path.isfile(ckpt_path):
-        raise FileNotFoundError(f"Checkpoint not found at path: {ckpt_path}")
-    yolo_obj.load_weights(ckpt_path, device, pretrained=False)
+    yolo_obj.load_weights('ckpt', device, pretrained=False)
     mAP = yolo_obj.evaluate(d_test, device)
     assert mAP >= 20.0, f"Low mAP value on test set: {mAP}"
