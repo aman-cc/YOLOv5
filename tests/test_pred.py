@@ -5,7 +5,7 @@ import torch
 import yaml
 
 path = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.join(path, '..'))
+sys.path.append(os.path.join(path, ".."))
 import yolo
 from yolov5 import YOLOv5
 
@@ -60,8 +60,10 @@ def test_yolov5_pred():
     num_classes = len(dataset_test.classes)
     warmup_iters = max(1000, 3 * len(dataset_test))
     yolo_obj.load_model(num_classes, warmup_iters, device)
-    yolo_obj.load_weights('ckpt', device, pretrained=False)
+    yolo_obj.load_weights("ckpt", device, pretrained=False)
     results = yolo_obj.infer(d_test, device)
-    bbox_list = [results['predictions'][i]['boxes'] for i in range(len(results['predictions']))]
-    bbox_res = list(map(lambda x: len(x) > 0, bbox_list)) 
+    bbox_list = [
+        results["predictions"][i]["boxes"] for i in range(len(results["predictions"]))
+    ]
+    bbox_res = list(map(lambda x: len(x) > 0, bbox_list))
     assert all(bbox_res), f"Detections not found in some images"

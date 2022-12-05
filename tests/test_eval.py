@@ -5,7 +5,7 @@ import torch
 import yaml
 
 path = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.join(path, '..'))
+sys.path.append(os.path.join(path, ".."))
 import yolo
 from yolov5 import YOLOv5
 
@@ -64,6 +64,6 @@ def test_yolov5_eval():
     num_classes = len(dataset_test.classes)
     warmup_iters = max(1000, 3 * len(dataset_test))
     yolo_obj.load_model(num_classes, warmup_iters, device)
-    yolo_obj.load_weights('ckpt', device, pretrained=False)
+    yolo_obj.load_weights("ckpt", device, pretrained=False)
     mAP = yolo_obj.evaluate(d_test, device)
     assert mAP >= 20.0, f"Low mAP value on test set: {mAP}"

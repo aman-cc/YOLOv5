@@ -5,9 +5,10 @@ import torch
 import yaml
 
 path = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.join(path, '..'))
+sys.path.append(os.path.join(path, ".."))
 import yolo
 from yolov5 import YOLOv5
+
 
 def test_yolov5_train():
     with open("tests/test_config.yaml", "r") as stream:
