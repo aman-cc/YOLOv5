@@ -154,51 +154,51 @@ class IntermediateLayerGetter(nn.ModuleDict):
 # attention modules
 
 
-class ConvBlockAttention(nn.Module):
-    def __init__(self, in_channels, ratio=16, kernel_size=7):
-        super().__init__()
-        self.cam = ChannelAttention(in_channels, ratio)
-        self.sam = SpatialAttention(kernel_size)
+# class ConvBlockAttention(nn.Module):
+#     def __init__(self, in_channels, ratio=16, kernel_size=7):
+#         super().__init__()
+#         self.cam = ChannelAttention(in_channels, ratio)
+#         self.sam = SpatialAttention(kernel_size)
 
-    def forward(self, x):
-        Mc = self.cam(x)
-        x = x * Mc
-        Ms = self.sam(x)
-        x = x * Ms
-        return x
-
-
-class ChannelAttention(nn.Module):
-    def __init__(self, in_channels, ratio=16):
-        super().__init__()
-        self.avg_pool = nn.AdaptiveAvgPool2d(1)
-        self.max_pool = nn.AdaptiveMaxPool2d(1)
-
-        self.mlp = nn.Sequential(
-            nn.Conv2d(in_channels, in_channels // ratio, 1, bias=False),
-            nn.ReLU(inplace=True),
-            nn.Conv2d(in_channels // ratio, in_channels, 1, bias=False),
-        )
-
-    def forward(self, x):
-        avg_out = self.mlp(self.avg_pool(x))
-        max_out = self.mlp(self.max_pool(x))
-        Mc = torch.sigmoid(avg_out + max_out)
-        return Mc  # (Tensor[N, C, 1, 1])
+#     def forward(self, x):
+#         Mc = self.cam(x)
+#         x = x * Mc
+#         Ms = self.sam(x)
+#         x = x * Ms
+#         return x
 
 
-class SpatialAttention(nn.Module):
-    def __init__(self, kernel_size=7):
-        super().__init__()
-        if isinstance(kernel_size, int):
-            kernel_size = (kernel_size, kernel_size)
-        padding = tuple((k - 1) // 2 for k in kernel_size)
+# class ChannelAttention(nn.Module):
+#     def __init__(self, in_channels, ratio=16):
+#         super().__init__()
+#         self.avg_pool = nn.AdaptiveAvgPool2d(1)
+#         self.max_pool = nn.AdaptiveMaxPool2d(1)
 
-        self.conv = nn.Conv2d(2, 1, kernel_size, padding=padding, bias=False)
+#         self.mlp = nn.Sequential(
+#             nn.Conv2d(in_channels, in_channels // ratio, 1, bias=False),
+#             nn.ReLU(inplace=True),
+#             nn.Conv2d(in_channels // ratio, in_channels, 1, bias=False),
+#         )
 
-    def forward(self, x):
-        avg_out = torch.mean(x, dim=1, keepdim=True)
-        max_out = torch.max(x, dim=1, keepdim=True)[0]
-        out = torch.cat((avg_out, max_out), dim=1)
-        Ms = torch.sigmoid(self.conv(out))
-        return Ms  # (Tensor[N, 1, H, W])
+#     def forward(self, x):
+#         avg_out = self.mlp(self.avg_pool(x))
+#         max_out = self.mlp(self.max_pool(x))
+#         Mc = torch.sigmoid(avg_out + max_out)
+#         return Mc  # (Tensor[N, C, 1, 1])
+
+
+# class SpatialAttention(nn.Module):
+#     def __init__(self, kernel_size=7):
+#         super().__init__()
+#         if isinstance(kernel_size, int):
+#             kernel_size = (kernel_size, kernel_size)
+#         padding = tuple((k - 1) // 2 for k in kernel_size)
+
+#         self.conv = nn.Conv2d(2, 1, kernel_size, padding=padding, bias=False)
+
+#     def forward(self, x):
+#         avg_out = torch.mean(x, dim=1, keepdim=True)
+#         max_out = torch.max(x, dim=1, keepdim=True)[0]
+#         out = torch.cat((avg_out, max_out), dim=1)
+#         Ms = torch.sigmoid(self.conv(out))
+#         return Ms  # (Tensor[N, 1, H, W])
