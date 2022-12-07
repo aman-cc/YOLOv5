@@ -1,16 +1,25 @@
-sample_payload: 'sample_payload.json'
 EXPT_DIR : "./log"
-LOG_DIR : "./log"
-DATA_DIR : "./pascal_mini_ds"
+DATA_DIR : "./data_pascal_voc_backup"
 WEIGHTS_DIR : "./weights"
-exp_name: "yolov5-coco"
-weightsclear: True
-
-### TRAIN FUNCTION ARGS ###
 onprem: True
-train_epochs: 2
-batch_size: 2
+train_epochs: 50
+batch_size: 32
 lr: 0.1
 wtd: 0.0001
 momentum: 0.9
-use_cuda: False
+use_cuda: True
+dataset: coco
+dali: False
+model_size: small
+period: 273
+iters: -1
+seed: 3
+img_sizes: [320, 416]
+lr: 0.01
+momentum: 0.937
+weight_decay: 0.0005
+print_freq: 100
+world_size: 1
+distributed: False
+amp: False
+mosaic: null

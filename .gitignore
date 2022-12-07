@@ -2,6 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
+**/gpu_info.json
 
 # C extensions
 *.so
@@ -12,6 +13,8 @@ build/
 develop-eggs/
 dist/
 downloads/
+data*/
+log/
 eggs/
 .eggs/
 lib/

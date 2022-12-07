@@ -1,6 +1,8 @@
 # Object Detection using YOLOv5
 Source: https://github.com/Okery/YOLOv5-PyTorch
 
+[![Python application](https://github.com/aman-cc/YOLOv5/actions/workflows/python-app.yml/badge.svg)](https://github.com/aman-cc/YOLOv5/actions/workflows/python-app.yml)
+
 ## 1. Download COCO Dataset
 ```
 ./download_coco.sh
