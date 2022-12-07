@@ -3,6 +3,8 @@ Source: https://github.com/Okery/YOLOv5-PyTorch
 
 [![Python application](https://github.com/aman-cc/YOLOv5/actions/workflows/python-app.yml/badge.svg)](https://github.com/aman-cc/YOLOv5/actions/workflows/python-app.yml)
 
+[![codecov](https://codecov.io/github/aman-cc/YOLOv5/branch/main/graph/badge.svg?token=SBVAWWY7WZ)](https://codecov.io/github/aman-cc/YOLOv5)
+
 ## 1. Download COCO Dataset
 ```
 ./download_coco.sh
