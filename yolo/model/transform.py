@@ -30,8 +30,9 @@ class Transformer(nn.Module):
 
         image_shapes = None
         if self.training:
-            if self.mosaic:
-                images, targets = mosaic_augment(images, targets)
+            # if self.mosaic:
+            #     images, targets = mosaic_augment(images, targets)
+            pass
         else:
             image_shapes = [img.shape[1:] for img in images]
 
