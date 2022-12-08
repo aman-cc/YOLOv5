@@ -1,5 +1,7 @@
 from .datasets import *
-from .distributed import get_rank, get_world_size, init_distributed_mode
+from .distributed import get_rank
+
+# from .distributed import get_rank, get_world_size, init_distributed_mode
 from .engine import evaluate, train_one_epoch
 from .gpu import *
 from .model import YOLOv5

@@ -51,7 +51,8 @@ def collect_gpu_info(model_name, fps):
         gpu_info = {}
 
     prop = get_gpu_prop()
-    if not prop: return prop
+    if not prop:
+        return prop
     name = prop[0]["name"]
     check = [p["name"] == name for p in prop]
     if all(check):
