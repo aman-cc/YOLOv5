@@ -1,9 +1,13 @@
 # Object Detection using YOLOv5
-Source: https://github.com/Okery/YOLOv5-PyTorch
+Object detection library YOLOv5 based on just pytorch. pycocotools pip package used for MSCOCO evaluation. [[Source]](https://github.com/Okery/YOLOv5-PyTorch)
 
 [![Python application](https://github.com/aman-cc/YOLOv5/actions/workflows/python-app.yml/badge.svg)](https://github.com/aman-cc/YOLOv5/actions/workflows/python-app.yml)
 
 [![codecov](https://codecov.io/github/aman-cc/YOLOv5/branch/main/graph/badge.svg?token=SBVAWWY7WZ)](https://codecov.io/github/aman-cc/YOLOv5)
+
+<a target="_blank" href="https://colab.research.google.com/github/aman-cc/YOLOv5/blob/main/notebook_demo.ipynb">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
 
 ## 1. Download COCO Dataset
 ```
